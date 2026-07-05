@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tier9-appset
+  namespace: argocd
+  labels:
+    custom.kubernetes.io/is-adhoc: "true"
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/nixonjoshua98/nixon-gitops.git
+              revision: main
+              files:
+                - path: "configuration/tier9/environments/**/argocd.yaml"
+          - list:
+              elementsYaml: "{{ .components | toJson }}"
+  template:
+    metadata:
+      name: "{{ .name }}-{{ .environment }}"
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: "/charts/common-deployable;/charts/cnpg-cluster;/configuration/tier9/environments/**/argocd.yaml;/configuration/tier9/values.yaml;/configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/nixonjoshua98/nixon-gitops.git
+        targetRevision: main
+        path: "{{ .chart }}"
+        helm:
+          releaseName: "{{ .name }}-{{ .environment }}"
+          ignoreMissingValueFiles: false
+          valueFiles: ["/configuration/tier9/values.yaml", "/configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml"]
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        managedNamespaceMetadata:
+          labels:
+            custom.kubernetes.io/require-image-registry-secret: "true"
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - Prune=confirm
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - RespectIgnoreDifferences=true

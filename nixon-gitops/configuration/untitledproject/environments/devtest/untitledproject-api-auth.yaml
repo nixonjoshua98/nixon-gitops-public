@@ -1,0 +1,21 @@
+nameOverride: untitledproject-api-auth
+image: "untitledproject.api.auth:develop-20260705-105334-6ec399e8"
+dotNetEnvironment: DevTest
+resources:
+  limits:
+    memory: 160Mi
+    cpu: 500m
+  requests:
+    memory: 100Mi
+    cpu: 50m
+ingress:
+  enabled: true
+  rules:
+    - host: up-api.joshuanixon.dev
+      paths:
+        - path: /connect
+          pathType: Prefix
+        - path: /.well-known
+          pathType: Prefix
+        - path: /oauth2
+          pathType: Prefix

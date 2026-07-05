@@ -1,0 +1,20 @@
+name: Tier9
+
+on:
+  repository_dispatch:
+    types:
+      - tier9.abo.worldchat
+      - tier9.abo.slime
+      - tier9.abo.api
+
+permissions:
+  contents: write
+
+jobs:
+  patch-image:
+    uses: ./.github/workflows/Template.Update.Deployment.Image.yaml
+    with:
+      environment: ${{ github.event.client_payload.environment }}
+      project: tier9
+      action: ${{ github.event.action }}
+      image: ${{ github.event.client_payload.image }}

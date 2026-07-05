@@ -1,0 +1,41 @@
+nameOverride: tier9-abo-worldchat
+image: abo.worldchat:master-20260702-211835-c906880c
+resources:
+  limits:
+    memory: 180Mi
+    cpu: 500m
+  requests:
+    memory: 150Mi
+    cpu: 50m
+extraEnvValues:
+  - name: BOT_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-worldchat
+        key: BOT_TOKEN
+  - name: PG_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-worldchat
+        key: PG_PASSWORD
+  - name: OPENAI_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-worldchat
+        key: OPENAI_KEY
+  - name: T9_GOOGLE_SERVICE_ACCOUNT
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-worldchat
+        key: GOOGLE_SERVICE_ACCOUNT
+externalSecret:
+  name: tier9-abo-worldchat
+  values:
+    - secretKey: BOT_TOKEN
+      remoteRefKey: WORLD-CHAT-BOT-TOKEN
+    - secretKey: OPENAI_KEY
+      remoteRefKey: OPENAI-KEY
+    - secretKey: PG_PASSWORD
+      remoteRefKey: PG-WEB-USER-PW
+    - secretKey: GOOGLE_SERVICE_ACCOUNT
+      remoteRefKey: GOOGLE-SERVICE-ACCOUNT

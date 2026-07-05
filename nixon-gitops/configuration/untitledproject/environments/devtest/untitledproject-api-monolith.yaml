@@ -1,0 +1,17 @@
+nameOverride: untitledproject-api-monolith
+image: "untitledproject.api.monolith:develop-20260705-105336-6ec399e8"
+dotNetEnvironment: DevTest
+resources:
+  limits:
+    memory: 120Mi
+    cpu: 500m
+  requests:
+    memory: 80Mi
+    cpu: 50m
+ingress:
+  enabled: true
+  rules:
+    - host: up-api.joshuanixon.dev
+      paths:
+        - path: /
+          pathType: Prefix

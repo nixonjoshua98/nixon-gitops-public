@@ -1,0 +1,27 @@
+ingress:
+  enabled: false
+
+service:
+  enabled: false
+  defaultPorts:
+    http:
+      port: 8080
+      targetPort: http
+      protocol: TCP
+
+imagePullSecret: null
+
+containerPorts:
+  http:
+    enabled: false
+    containerPort: 8080
+
+serviceMonitor:
+  enabled: false
+
+dotNetEnvironment: null
+
+readinessProbe:
+  enabled: false
+  httpGet:
+    path: /healthz/ready

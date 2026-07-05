@@ -1,0 +1,24 @@
+{{- range .Values.certificates }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+{{- include "common-deployable.labels" $ | nindent 4 }}
+spec:
+  secretName: {{ .name }}
+  commonName: {{ .commonName }}
+  subject:
+    organizations:
+      - "snackbyte"
+  dnsNames: 
+{{- toYaml .dnsNames | nindent 4 }}
+  privateKey:
+    algorithm: "RSA"
+    size: 2048
+  issuerRef:
+    name: {{ $.Values.clusterIssuer }}
+    kind: ClusterIssuer
+---
+{{- end }}

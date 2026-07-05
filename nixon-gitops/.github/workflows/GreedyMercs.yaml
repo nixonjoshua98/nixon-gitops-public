@@ -1,0 +1,19 @@
+name: GreedyMercs
+
+on:
+  repository_dispatch:
+    types:
+      - gm.api.monolith
+      - gm.discordbot
+
+permissions:
+  contents: write
+
+jobs:
+  patch-image:
+    uses: ./.github/workflows/Template.Update.Deployment.Image.yaml
+    with:
+      environment: ${{ github.event.client_payload.environment }}
+      project: greedymercs
+      action: ${{ github.event.action }}
+      image: ${{ github.event.client_payload.image }}

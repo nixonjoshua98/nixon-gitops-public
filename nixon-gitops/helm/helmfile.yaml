@@ -1,0 +1,127 @@
+repositories:
+  - name: hcloud
+    url: https://charts.hetzner.cloud
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+  - name: cnpg
+    url: https://cloudnative-pg.github.io/charts
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: traefik
+    url: https://traefik.github.io/charts
+
+helmDefaults:
+  historyMax: 5
+
+releases:
+  - name: cluster-resources
+    namespace: argocd
+    chart: ../charts/cluster-resources
+    needs:
+      - argocd/argocd
+      - cert-manager/cert-manager
+      - external-secrets/external-secrets
+    values:
+      - ../configuration/base/values.yaml
+
+  ###################
+  # ArgoCD
+
+  - name: argocd
+    namespace: argocd
+    chart: argo/argo-cd
+    version: 9.5.22
+    values:
+      - values/argocd.yaml
+
+  ###################
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.20.2
+    needs:
+      - monitoring/kube-prometheus-stack
+    values:
+      - values/cert-manager.yaml
+
+  - name: traefik
+    namespace: traefik
+    chart: traefik/traefik
+    version: 39.0.9
+    values:
+      - values/traefik.yaml
+
+  - name: external-secrets
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    version: 2.6.0
+    needs:
+      - cert-manager/cert-manager
+    values:
+      - values/external-secrets.yaml
+
+  ###################
+  # Monitoring
+
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    version: 86.2.3
+    values:
+      - values/prometheus.yaml
+
+  # - name: loki
+  #   namespace: monitoring
+  #   chart: grafana/loki
+  #   version: 6.49.0
+  #   values:
+  #     - values/grafana-loki.yaml
+
+  # - name: alloy
+  #   namespace: monitoring
+  #   chart: grafana/alloy
+  #   version: 1.5.0
+  #   needs:
+  #     - monitoring/loki
+  #   values:
+  #     - values/grafana-alloy.yaml
+
+  ###################
+  # CNPG
+
+  - name: cnpg
+    namespace: cnpg-system
+    chart: cnpg/cloudnative-pg
+    version: 0.28.3
+    needs:
+      - cert-manager/cert-manager
+
+  - name: cnpg-barman-cloud
+    namespace: cnpg-system
+    chart: cnpg/plugin-barman-cloud
+    version: 0.7.0
+    needs:
+      - cnpg-system/cnpg
+      - cert-manager/cert-manager
+
+  ###################
+  # Hetzner
+
+  - name: hcloud-ccm
+    namespace: kube-system
+    chart: hcloud/hcloud-cloud-controller-manager
+    version: 1.33.0
+    values:
+      - values/hcloud-ccm.yaml
+
+  # - name: hcloud-csi
+  #   namespace: kube-system
+  #   chart: hcloud/hcloud-csi
+  #   version: 2.20.0

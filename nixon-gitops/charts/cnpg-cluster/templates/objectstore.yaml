@@ -1,0 +1,21 @@
+{{ if .Values.objectStore.enabled }}
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: {{ include "cnpg-cluster.objectStore" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "cnpg-cluster.labels" $ | indent 4 }}
+spec:
+  retentionPolicy: 7d
+  configuration:
+    data:
+      compression: bzip2
+    wal:
+      compression: bzip2
+    destinationPath: {{ .Values.objectStore.destinationPath | quote }}
+    azureCredentials:
+      connectionString:
+        name: {{ include "cnpg-cluster.objectStore" . }}
+        key: CONNECTION_STRING
+{{- end }}

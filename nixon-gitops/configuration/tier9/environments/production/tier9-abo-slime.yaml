@@ -1,0 +1,41 @@
+nameOverride: tier9-abo-slime
+image: abo.slime:master-20260702-211931-c906880c
+resources:
+  limits:
+    memory: 350Mi
+    cpu: 500m
+  requests:
+    memory: 290Mi
+    cpu: 50m
+extraEnvValues:
+  - name: BOT_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-slime
+        key: BOT_TOKEN
+  - name: PG_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-slime
+        key: PG_PASSWORD
+  - name: OPENAI_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-slime
+        key: OPENAI_KEY
+  - name: T9_GOOGLE_SERVICE_ACCOUNT
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-slime
+        key: GOOGLE_SERVICE_ACCOUNT
+externalSecret:
+  name: tier9-abo-slime
+  values:
+    - secretKey: BOT_TOKEN
+      remoteRefKey: SLIME-BOT-TOKEN
+    - secretKey: OPENAI_KEY
+      remoteRefKey: OPENAI-KEY
+    - secretKey: PG_PASSWORD
+      remoteRefKey: PG-WEB-USER-PW
+    - secretKey: GOOGLE_SERVICE_ACCOUNT
+      remoteRefKey: GOOGLE-SERVICE-ACCOUNT

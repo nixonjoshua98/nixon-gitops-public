@@ -1,0 +1,32 @@
+nameOverride: tier9-abo-api
+image: abo.api:master-20260702-211938-c906880c
+resources:
+  limits:
+    memory: 150Mi
+    cpu: 500m
+  requests:
+    memory: 40Mi
+    cpu: 50m
+extraEnvValues:
+  - name: PG_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: tier9-abo-api
+        key: PG_PASSWORD
+containerPorts:
+  http:
+    enabled: true
+externalSecret:
+  name: tier9-abo-api
+  values:
+    - secretKey: PG_PASSWORD
+      remoteRefKey: PG-WEB-USER-PW
+service:
+  enabled: true
+ingress:
+  enabled: true
+  rules:
+    - host: api.autobattles.online
+      paths:
+        - path: /
+          pathType: Prefix

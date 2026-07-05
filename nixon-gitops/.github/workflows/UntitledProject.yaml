@@ -1,0 +1,19 @@
+name: UntitledProject
+
+on:
+  repository_dispatch:
+    types:
+      - untitledproject.api.monolith
+      - untitledproject.api.auth
+
+permissions:
+  contents: write
+
+jobs:
+  patch-image:
+    uses: ./.github/workflows/Template.Update.Deployment.Image.yaml
+    with:
+      environment: ${{ github.event.client_payload.environment }}
+      project: untitledproject
+      action: ${{ github.event.action }}
+      image: ${{ github.event.client_payload.image }}

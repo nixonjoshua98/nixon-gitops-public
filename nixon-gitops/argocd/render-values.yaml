@@ -1,0 +1,18 @@
+appSetValues:
+  - APPSET_NAME: greedymercs-appset
+    ARGO_FILE_PATH: configuration/greedymercs/environments/**/argocd.yaml
+    VALUE_FILES:
+      - /configuration/greedymercs/values.yaml
+      - /configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml
+
+  - APPSET_NAME: tier9-appset
+    ARGO_FILE_PATH: configuration/tier9/environments/**/argocd.yaml
+    VALUE_FILES:
+      - /configuration/tier9/values.yaml
+      - /configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml
+
+  - APPSET_NAME: untitledproject-appset
+    ARGO_FILE_PATH: configuration/untitledproject/environments/**/argocd.yaml
+    VALUE_FILES:
+      - /configuration/untitledproject/values.yaml
+      - /configuration/untitledproject/environments/{{ .environment }}/{{ .name }}.yaml

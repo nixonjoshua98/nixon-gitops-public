@@ -1,0 +1,13 @@
+nameOverride: untitledproject-api-auth
+
+imagePullSecret: registry-secret
+
+containerPorts:
+  http:
+    enabled: true
+
+service:
+  enabled: true
+
+readinessProbe:
+  enabled: true
