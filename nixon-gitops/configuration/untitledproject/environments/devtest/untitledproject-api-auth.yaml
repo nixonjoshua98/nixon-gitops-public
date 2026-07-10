@@ -1,5 +1,5 @@
 nameOverride: untitledproject-api-auth
-image: "untitledproject.api.auth:develop-20260705-105334-6ec399e8"
+image: "untitledproject.api.auth:develop-20260710-075748-d01fe793"
 dotNetEnvironment: DevTest
 resources:
   limits:

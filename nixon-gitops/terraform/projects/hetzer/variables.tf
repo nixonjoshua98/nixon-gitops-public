@@ -36,11 +36,6 @@ variable "hcloud_token" {
   sensitive = true
 }
 
-variable "netbird_setup_key" {
-  type = string
-  sensitive = true
-}
-
 variable "hcloud_firewall_rules" {
   type = list(object({
     description = string

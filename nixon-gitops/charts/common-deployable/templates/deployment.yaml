@@ -26,7 +26,7 @@ spec:
 {{- end }}
 
       containers:
-        - name: container
+        - name: {{ include "common-deployable.name" . }}
           image: {{ .Values.image | quote }}
 
 {{- if .Values.readinessProbe.enabled }}
@@ -35,6 +35,7 @@ spec:
               path: {{ .Values.readinessProbe.httpGet.path }}
               port: http
             timeoutSeconds: 3
+            successThreshold: 3
 {{- end }}
 
 {{- if .Values.resources }}     
@@ -57,13 +58,21 @@ spec:
           securityContext:
 {{- toYaml .Values.securityContext | nindent 12 }}
 {{- end }}
-
           env:
             - name: DOTNET_hostBuilder:reloadConfigOnChange
               value: 'false'
 {{- if .Values.dotNetEnvironment }}
             - name: DOTNET_ENVIRONMENT
-              value: {{ .Values.dotNetEnvironment }}
+              value: {{ .Values.dotNetEnvironment | quote }}
+{{- end }}
+{{- $asp := include "common-deployable.aspnetCoreUrlsEnvValue" . }}
+{{- if $asp }}
+            - name: ASPNETCORE_URLS
+              value: {{ $asp | quote }}
+{{- end }}
+{{- if .Values.containerPorts.metrics.enabled }}
+            - name: METRICS_PORT
+              value: {{ .Values.containerPorts.metrics.containerPort | quote }}
 {{- end }}
 {{- if .Values.extraEnvValues }}
 {{- toYaml .Values.extraEnvValues | nindent 12 }}

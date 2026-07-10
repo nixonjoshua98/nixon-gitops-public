@@ -20,15 +20,15 @@ helmDefaults:
   historyMax: 5
 
 releases:
-  - name: cluster-resources
-    namespace: argocd
-    chart: ../charts/cluster-resources
-    needs:
-      - argocd/argocd
-      - cert-manager/cert-manager
-      - external-secrets/external-secrets
-    values:
-      - ../configuration/base/values.yaml
+  # - name: cluster-resources
+  #   namespace: argocd
+  #   chart: ../charts/cluster-resources
+  #   needs:
+  #     - argocd/argocd
+  #     - cert-manager/cert-manager
+  #     - external-secrets/external-secrets
+  #   values:
+  #     - ../configuration/base/values.yaml
 
   ###################
   # ArgoCD

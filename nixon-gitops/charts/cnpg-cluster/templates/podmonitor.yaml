@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "cnpg-cluster.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "cnpg-cluster.labels" . | nindent 4 }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      cnpg.io/cluster: {{ include "cnpg-cluster.clusterName" . }}
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s

@@ -10,7 +10,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 repo_root="$(cd -- "${script_dir}/.." && pwd)"
 
-playbook_file="${script_dir}/playbooks/${1}"
+playbook_file="${script_dir}/${1}"
 
 exec ansible-playbook \
   --inventory "${script_dir}/inventory.ini" \

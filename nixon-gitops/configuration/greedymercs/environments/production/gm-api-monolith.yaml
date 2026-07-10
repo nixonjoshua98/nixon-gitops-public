@@ -2,10 +2,10 @@ nameOverride: gm-api-monolith
 image: gm.api.monolith:master-20260704-215559-c7c62ae0
 resources:
   limits:
-    memory: 310Mi
+    memory: 300Mi
     cpu: 500m
   requests:
-    memory: 270Mi
+    memory: 260Mi
     cpu: 50m
 extraEnvValues:
   - name: PG_PASSWORD
@@ -39,6 +39,9 @@ externalSecret:
       remoteRefKey: PG-WEB-USER-PW
 service:
   enabled: true
+  ports:
+    http:
+      enabled: true
 ingress:
   enabled: true
   rules:

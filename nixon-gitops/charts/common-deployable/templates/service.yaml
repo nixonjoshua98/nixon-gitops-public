@@ -7,14 +7,16 @@ metadata:
   labels:
 {{- include "common-deployable.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type | default "ClusterIP" }}
+  type: "ClusterIP"
   selector:
 {{- include "common-deployable.selectorLabels" . | nindent 4 }}
   ports:
-{{- range $name, $port := .Values.service.defaultPorts }}
+{{- range $name, $port := .Values.service.ports }}
+{{- if $port.enabled }}
     - name: {{ $name }}
       port: {{ $port.port }}
       targetPort: {{ $port.targetPort }}
       protocol: {{ $port.protocol }}
+{{- end }}
 {{- end }}
 {{- end }}

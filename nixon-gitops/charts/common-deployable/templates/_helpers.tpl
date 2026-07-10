@@ -60,3 +60,25 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Build a semicolon-separated ASPNETCORE_URLS value from enabled containerPorts.
+Returns empty string if no ports are enabled.
+Usage: include "common-deployable.aspnetcore_urls" .
+*/}}
+{{- define "common-deployable.aspnetCoreUrlsEnvValue" -}}
+{{- $ports := .Values.containerPorts }}
+{{- $urls := list }}
+{{- if $ports }}
+{{- range $name, $port := $ports }}
+  {{- if $port.enabled }}
+    {{- $u := printf "http://+:%v" $port.containerPort }}
+    {{- $urls = append $urls $u }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- if gt (len $urls) 0 }}
+{{- printf "%s" (join ";" $urls) }}
+{{- end }}
+{{- end }}
+

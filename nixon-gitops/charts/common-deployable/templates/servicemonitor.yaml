@@ -2,18 +2,18 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-	name: {{ include "common-deployable.name" . }}
-	namespace: {{ .Release.Namespace }}
-	labels:
+  name: {{ include "common-deployable.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
 {{- include "common-deployable.labels" . | nindent 4 }}
 spec:
-	namespaceSelector:
+  namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
-	selector:
-		matchLabels:
+  selector:
+    matchLabels:
 {{- include "common-deployable.selectorLabels" . | nindent 6 }}
-	endpoints:
+  endpoints:
     - port: metrics
       interval: 30s
       path: /metrics

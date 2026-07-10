@@ -23,6 +23,9 @@ externalSecret:
       remoteRefKey: PG-WEB-USER-PW
 service:
   enabled: true
+  ports:
+    http:
+      enabled: true
 ingress:
   enabled: true
   rules:

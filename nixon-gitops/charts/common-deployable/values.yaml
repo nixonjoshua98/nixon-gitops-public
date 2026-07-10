@@ -3,9 +3,15 @@ ingress:
 
 service:
   enabled: false
-  defaultPorts:
+  ports:
     http:
+      enabled: false
       port: 8080
+      targetPort: http
+      protocol: TCP
+    metrics:
+      enabled: false
+      port: 9182
       targetPort: http
       protocol: TCP
 
@@ -15,6 +21,9 @@ containerPorts:
   http:
     enabled: false
     containerPort: 8080
+  metrics:
+    enabled: false
+    containerPort: 9182
 
 serviceMonitor:
   enabled: false

@@ -51,10 +51,8 @@ module "hcloud_server_pools" {
   ipv4_enabled = each.value.ipv4_enabled
   ipv6_enabled = each.value.ipv6_enabled
   subnet_id    = each.value.network_name == null || each.value.subnet_name == null ? null : module.hcloud_networks[each.value.network_name].subnets[each.value.subnet_name].id
-  user_data = templatefile("${path.module}/files/${each.value.cloud_init_file}", {
-    netbird_setup_key = var.netbird_setup_key
-  })
-  depends_on = [module.hcloud_networks]
+  user_data    = templatefile("${path.module}/files/${each.value.cloud_init_file}", {})
+  depends_on   = [module.hcloud_networks]
   labels = merge(
     {
       "server-pool-name" = each.key,
