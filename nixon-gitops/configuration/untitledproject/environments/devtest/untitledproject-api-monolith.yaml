@@ -1,13 +1,15 @@
 nameOverride: untitledproject-api-monolith
-image: "untitledproject.api.monolith:develop-20260710-075748-d01fe793"
-dotNetEnvironment: DevTest
+
+image: "untitledproject.api.monolith:develop-20260715-205307-0dac474f"
+
 resources:
   limits:
     memory: 140Mi
     cpu: 500m
   requests:
-    memory: 100Mi
-    cpu: 50m
+    memory: 120Mi
+    cpu: 100m
+
 ingress:
   enabled: true
   rules:

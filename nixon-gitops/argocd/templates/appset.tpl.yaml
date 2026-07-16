@@ -37,6 +37,11 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
       syncPolicy:
         managedNamespaceMetadata:
           labels:
@@ -45,7 +50,7 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-          - Prune=confirm
+          - Prune=true
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
           - RespectIgnoreDifferences=true

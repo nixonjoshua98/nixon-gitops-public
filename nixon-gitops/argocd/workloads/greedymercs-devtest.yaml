@@ -1,0 +1,10 @@
+environment: devtest
+
+namespace: greedymercs-devtest
+
+components:
+  - name: gm-api-monolith
+    chart: charts/common-deployable
+
+  - name: gm-postgresql
+    chart: charts/cnpg-cluster

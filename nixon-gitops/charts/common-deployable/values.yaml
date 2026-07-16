@@ -1,6 +1,8 @@
 ingress:
   enabled: false
 
+replicaCount: 1
+
 service:
   enabled: false
   ports:
@@ -30,7 +32,8 @@ serviceMonitor:
 
 dotNetEnvironment: null
 
+hpa:
+  enabled: false
+
 readinessProbe:
   enabled: false
-  httpGet:
-    path: /healthz/ready

@@ -1,0 +1,198 @@
+- name: Download k3s install script
+  ansible.builtin.get_url:
+    url: "{{ k3s_installer_url }}"
+    dest: "{{ k3s_installer_path }}"
+    mode: "0755"
+    force: false
+
+- name: Set controlplane_host fact
+  block:
+    - name: Find cluster init controlplane
+      ansible.builtin.set_fact:
+        controlplane_host: "{{ item }}"
+      loop: "{{ groups['controlplane'] }}"
+      when: hostvars[item]['is_cluster_initialiser'] | default(false) | bool
+
+    - name: Set controlplane_host fallback
+      ansible.builtin.set_fact:
+        controlplane_host: "{{ groups['controlplane'][0] }}"
+      when: controlplane_host is not defined
+
+    - name: Verify controlplane_host is defined
+      ansible.builtin.assert:
+        that:
+          - controlplane_host is defined
+          - controlplane_host | length > 0
+        fail_msg: "Failed to determine controlplane_host"
+
+- name: Set k3s_url fact
+  ansible.builtin.set_fact:
+    k3s_url: "https://{{ controlplane_host }}:6443"
+
+  # The k3s_url is used for all nodes, besides the init-cluster node
+  # We ideally use the bootstrapper node but then fallback to the first controlplane
+  # in the list. With assertions to prevent issues.
+
+- name: Fetch k3s_token
+  when: not (is_cluster_initialiser | default(false) | bool)
+  block:
+      # The cluster token is needed for all nodes, besides the node which is
+      # used to init the cluster itself.
+      # The controlplane_host is created above.
+
+    - name: Fetch k3s_token
+      ansible.builtin.slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: _k3s_token
+      when: controlplane_host is defined
+      delegate_to: "{{ controlplane_host }}"
+
+    - name: Set k3s_token fact
+      ansible.builtin.set_fact:
+        k3s_token: "{{ _k3s_token.content | b64decode | trim }}"    
+
+    - name: Verify k3s_token is defined
+      ansible.builtin.assert:
+        that:
+          - k3s_token is defined
+          - k3s_token | length > 0
+        fail_msg: "Failed to determine k3s_token"  
+
+  # Include the relevant node rule task.
+  # Generates the k3s_install command
+
+- name: Include 'controlplane.yaml'
+  include_tasks: controlplane.yaml
+  when: node_type == 'controlplane'
+
+- name: Include 'agent.yaml'
+  include_tasks: agent.yaml
+  when: node_type == 'agent'
+
+  # Executes the generates install command
+  # We log and writes the install command to file so its easier to debug
+  # The file itself hold no value in the installation process.
+
+- name: Execute k3s install
+  when: k3s_install_command is defined
+  block:
+    - name: Execute the k3s install command
+      ansible.builtin.shell: "{{ k3s_install_command }}"
+      register: k3s_install_output
+      changed_when: true
+
+    - name: Debug the k3s install output
+      ansible.builtin.debug:
+        var: k3s_install_output.stdout_lines
+
+    - name: Write install command to a file
+      ansible.builtin.copy:
+        content: "{{ k3s_install_command }}"
+        dest: /tmp/k3s-install-command
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# - name: Set cluster URL
+#   ansible.builtin.set_fact:
+#     k3s_cluster_url: "https://{{ cluster_init_node }}:{{ k3s_cluster_port }}"
+
+# - name: Build install command (bootstrap)
+#   ansible.builtin.set_fact:
+#     k3s_install_command: >-
+#       INSTALL_K3S_SKIP_DOWNLOAD=true
+#       INSTALL_K3S_VERSION="{{ k3s_version }}"
+#       INSTALL_K3S_EXEC="{{ (['--cluster-init', '--tls-san ' + inventory_hostname, '--node-external-ip ' + inventory_hostname] + k3s_controlplane_args + k3s_static_args) | join(' ') }}"
+#       sh {{ k3s_installer_path }}
+#   when: k3s_node_role == 'bootstrap'
+
+# - name: Fetch server token from bootstrap node
+#   ansible.builtin.slurp:
+#     src: /var/lib/rancher/k3s/server/node-token
+#   register: _k3s_token_raw
+#   delegate_to: "{{ k3s_bootstrap_host }}"
+#   when: k3s_node_role in ['controlplane', 'agent']
+
+# - name: Decode server token
+#   ansible.builtin.set_fact:
+#     k3s_server_token: "{{ _k3s_token_raw.content | b64decode | trim }}"
+#   when: k3s_node_role in ['controlplane', 'agent']
+
+# - name: Build install command (controlplane)
+#   ansible.builtin.set_fact:
+#     k3s_install_command: >-
+#       INSTALL_K3S_SKIP_DOWNLOAD=true
+#       INSTALL_K3S_VERSION="{{ k3s_version }}"
+#       K3S_URL="{{ k3s_cluster_url }}"
+#       K3S_TOKEN="{{ k3s_server_token }}"
+#       INSTALL_K3S_EXEC="{{ (['--tls-san ' + inventory_hostname, '--node-external-ip ' + inventory_hostname] + k3s_controlplane_args + k3s_static_args) | join(' ') }}"
+#       sh {{ k3s_installer_path }}
+#   when: k3s_node_role == 'controlplane'
+
+# - name: Build install command (agent)
+#   ansible.builtin.set_fact:
+#     k3s_install_command: >-
+#       INSTALL_K3S_SKIP_DOWNLOAD=true
+#       INSTALL_K3S_VERSION="{{ k3s_version }}"
+#       K3S_URL="{{ k3s_cluster_url }}"
+#       K3S_TOKEN="{{ k3s_server_token }}"
+#       INSTALL_K3S_EXEC="{{ (['--node-external-ip ' + inventory_hostname] + k3s_static_args) | join(' ') }}"
+#       sh {{ k3s_installer_path }}
+#   when: k3s_node_role == 'agent'
+
+# - name: Read existing install hash
+#   ansible.builtin.slurp:
+#     src: "{{ k3s_install_hash_file }}"
+#   register: _k3s_existing_hash_raw
+#   ignore_errors: true
+
+# - name: Set hash facts
+#   ansible.builtin.set_fact:
+#     k3s_existing_hash: "{{ (_k3s_existing_hash_raw.content | b64decode | trim) if _k3s_existing_hash_raw is succeeded else '' }}"
+#     k3s_install_hash: "{{ k3s_install_command | hash('sha256') | upper }}"
+
+# - name: Copy K3s binary to install path
+#   ansible.builtin.copy:
+#     src: "{{ k3s_binary_download_path }}"
+#     dest: "{{ k3s_binary_install_path }}"
+#     mode: "0755"
+#     remote_src: true
+#   when: k3s_install_hash != k3s_existing_hash
+
+# - name: Run k3s installer
+#   ansible.builtin.shell:
+#     cmd: "{{ k3s_install_command }}"
+#   when: k3s_install_hash != k3s_existing_hash
+
+# - name: Wait for k3s server service
+#   ansible.builtin.systemd:
+#     name: k3s
+#   register: _k3s_service
+#   until: _k3s_service.status.ActiveState == 'active'
+#   retries: 30
+#   delay: 5
+#   when:
+#     - k3s_install_hash != k3s_existing_hash
+#     - k3s_node_role in ['bootstrap', 'controlplane']
+
+# - name: Wait for k3s agent service
+#   ansible.builtin.systemd:
+#     name: k3s-agent
+#   register: _k3s_agent_service
+#   until: _k3s_agent_service.status.ActiveState == 'active'
+#   retries: 30
+#   delay: 5
+#   when:
+#     - k3s_install_hash != k3s_existing_hash
+#     - k3s_node_role == 'agent'

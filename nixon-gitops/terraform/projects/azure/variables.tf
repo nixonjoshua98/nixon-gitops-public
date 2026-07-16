@@ -15,17 +15,17 @@ variable "azure_tenant_id" {
 
 variable "azure_key_vaults" {
   type = list(object({
-    name                = string
-    resource_group_name = string
-    rbac                = optional(map(list(string)), {})
+    name                  = string
+    resource_group_name   = string
+    rbac_role_assignments = optional(map(list(string)), {})
   }))
 }
 
 variable "azure_container_registries" {
   type = list(object({
-    name                = string
-    resource_group_name = string
-    rbac                = optional(map(list(string)), {})
+    name                  = string
+    resource_group_name   = string
+    rbac_role_assignments = optional(map(list(string)), {})
   }))
 }
 

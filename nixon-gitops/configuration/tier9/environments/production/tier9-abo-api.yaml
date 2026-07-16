@@ -16,16 +16,19 @@ extraEnvValues:
 containerPorts:
   http:
     enabled: true
+
 externalSecret:
   name: tier9-abo-api
   values:
     - secretKey: PG_PASSWORD
       remoteRefKey: PG-WEB-USER-PW
+
 service:
   enabled: true
   ports:
     http:
       enabled: true
+      
 ingress:
   enabled: true
   rules:
@@ -33,3 +36,6 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+hpa:
+  enabled: true

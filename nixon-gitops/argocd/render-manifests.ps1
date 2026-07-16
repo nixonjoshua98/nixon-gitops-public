@@ -4,8 +4,8 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot               = Split-Path $PSScriptRoot -Parent
 $manifestsRoot          = Join-Path $repoRoot 'argocd'
-$appSetsRenderedRoot    = Join-Path $manifestsRoot 'app-sets'
-$valuesPath             = Join-Path $manifestsRoot 'render-values.yaml'
+$appSetsRenderedRoot    = Join-Path $manifestsRoot 'appsets'
+$valuesPath             = Join-Path $manifestsRoot 'config.yaml'
 $templateRoot           = Join-Path $manifestsRoot 'templates'
 $appsetTemplatePath     = Join-Path $templateRoot 'appset.tpl.yaml'
 $renderValues           = Get-Content -LiteralPath $valuesPath -Raw | ConvertFrom-Yaml

@@ -6,7 +6,7 @@ metadata:
   labels:
 {{- include "common-deployable.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
 {{- include "common-deployable.selectorLabels" . | nindent 6 }}
@@ -25,6 +25,16 @@ spec:
 {{- toYaml .Values.extraVolumes | nindent 8 }}
 {{- end }}
 
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+{{- include "common-deployable.selectorLabels" . | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+
       containers:
         - name: {{ include "common-deployable.name" . }}
           image: {{ .Values.image | quote }}
@@ -32,10 +42,9 @@ spec:
 {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.readinessProbe.httpGet.path }}
+              path: /healthz/ready
               port: http
             timeoutSeconds: 3
-            successThreshold: 3
 {{- end }}
 
 {{- if .Values.resources }}     
@@ -51,12 +60,6 @@ spec:
               containerPort: {{ $port.containerPort }}
 {{- end }}
 {{- end }}
-{{- end }}
-
-
-{{- if .Values.securityContext }}
-          securityContext:
-{{- toYaml .Values.securityContext | nindent 12 }}
 {{- end }}
           env:
             - name: DOTNET_hostBuilder:reloadConfigOnChange

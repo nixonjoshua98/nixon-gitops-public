@@ -1,8 +1,9 @@
-secretStore:
-  name: greedymercs-secretstore
-  refreshInterval: 12h
-
 dotNetEnvironment: Production
+
+secretStore:
+  name: tier9-secretstore
+  refreshInterval: 12h
+  
 imagePullSecret: registry-secret
 
 clusterIssuer: selfsigned-clusterissuer

@@ -349,7 +349,6 @@ $staticInstallArgs = @(
 $staticControlPlaneInstallArgs = @(
     "--disable-cloud-controller"
     "--disable traefik"
-    "--disable metrics-server"
     "--write-kubeconfig-mode 644"
     "--kubelet-arg=cloud-provider=external"
     "--node-taint=node-role.kubernetes.io/control-plane=:PreferNoSchedule"
@@ -412,6 +411,8 @@ if ($hasBootstrapNode) {
 
     $clusterInitCommand = New-ClusterInitCommand `
         -serverIp $clusterEndpointIp
+
+    Write-Log -Label "Command" -Value $clusterInitCommand
 
     Run-InstallProcess `
         -target $clusterEndpointIp `
@@ -486,6 +487,7 @@ foreach ($agent in $agents) {
         -agentIp $agent
 
     Write-Log -Label "Agent" -Value $agent
+    Write-Log -Label "Command" -Value $installCommand
 
     Run-InstallProcess `
         -Target $agent `

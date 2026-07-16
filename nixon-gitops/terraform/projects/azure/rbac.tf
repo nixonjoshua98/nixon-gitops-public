@@ -17,7 +17,7 @@ locals {
   azure_rbac_assignments_by_key = merge(flatten([
     for scope_type, resources in local.rbac_resource_configs : [
       for resource in resources : merge([
-        for role_name, principal_refs in try(resource.rbac, {}) : {
+        for role_name, principal_refs in try(resource.rbac_role_assignments, {}) : {
           for principal_ref in principal_refs :
           "${scope_type}.${resource.name}.${role_name}.${principal_ref}" => {
             scope_type           = scope_type

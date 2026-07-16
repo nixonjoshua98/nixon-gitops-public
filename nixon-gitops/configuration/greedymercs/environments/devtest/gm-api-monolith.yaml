@@ -1,6 +1,6 @@
 nameOverride: gm-api-monolith
 
-image: gm.api.monolith:master-20260704-215559-c7c62ae0
+image: "gm.api.monolith:develop-compat-20260712-175423-6a749433"
 
 resources:
   limits:
@@ -16,12 +16,12 @@ extraEnvValues:
       secretKeyRef:
         name: gm-api
         key: PG_PASSWORD
-  - name: Auth__DiscordClientSecret
+  - name: OpenIddict__DiscordClientSecret
     valueFrom:
       secretKeyRef:
         name: gm-api
         key: DISCORD_CLIENT_SECRET
-  - name: Auth__GoogleClientSecret
+  - name: OpenIddict__GoogleClientSecret
     valueFrom:
       secretKeyRef:
         name: gm-api
@@ -53,15 +53,11 @@ service:
 ingress:
   enabled: true
   rules:
-    - host: api.greedymercs.com
-      paths:
-        - path: /
-          pathType: Prefix
-    - host: auth.greedymercs.com
+    - host: api-devtest.greedymercs.com
       paths:
         - path: /
           pathType: Prefix
 
-dotNetEnvironment: Production
+dotNetEnvironment: DevTest
 
 imagePullSecret: registry-secret

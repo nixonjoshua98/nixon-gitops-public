@@ -1,1 +1,25 @@
 dotNetEnvironment: DevTest
+
+nameOverride: untitledproject-api-auth
+
+imagePullSecret: registry-secret
+
+containerPorts:
+  http:
+    enabled: true
+  metrics:
+    enabled: true
+
+service:
+  enabled: true
+  ports:
+    http:
+      enabled: true
+    metrics:
+      enabled: true
+
+readinessProbe:
+  enabled: true
+
+serviceMonitor:
+  enabled: true

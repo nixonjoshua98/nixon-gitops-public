@@ -44,7 +44,8 @@ jobs:
           echo "FILE_PATH_LOWER=${FILE_PATH_LOWER}" >>${GITHUB_ENV}
 
       - name: Update image
-        run: yq eval --inplace '.image = strenv(IMAGE)' "$FILE_PATH_LOWER"
+        run: |
+          sed -i "s|^image:.*|image: \"$IMAGE\"|" "$FILE_PATH_LOWER"
 
       - name: Commit and push changes
         run: |

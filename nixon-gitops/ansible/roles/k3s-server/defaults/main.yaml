@@ -1,0 +1,22 @@
+k3s_installer_url: "https://get.k3s.io"
+
+k3s_installer_path: "/tmp/get.k3s.io"
+
+k3s_version: "v1.36.2+k3s1"
+
+k3s_binary_install_path: "/usr/local/bin/k3s"
+
+k3s_cluster_port: "6443"
+
+k3s_static_args:
+  - "--flannel-iface=enp7s0"
+  - "--kubelet-arg=max-pods=20"
+  - "--kubelet-arg=kube-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
+  - "--kubelet-arg=system-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
+
+k3s_controlplane_args:
+  - "--disable-cloud-controller"
+  - "--disable traefik"
+  - "--write-kubeconfig-mode 644"
+  - "--kubelet-arg=cloud-provider=external"
+  - "--node-taint=node-role.kubernetes.io/control-plane=:PreferNoSchedule"

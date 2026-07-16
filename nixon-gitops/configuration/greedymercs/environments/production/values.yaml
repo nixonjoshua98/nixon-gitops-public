@@ -1,0 +1,6 @@
+
+secretStore:
+  name: greedymercs-secretstore
+  refreshInterval: 12h
+
+clusterIssuer: selfsigned-clusterissuer

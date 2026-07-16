@@ -1,13 +1,15 @@
 nameOverride: untitledproject-api-auth
-image: "untitledproject.api.auth:develop-20260710-075748-d01fe793"
-dotNetEnvironment: DevTest
+
+image: "untitledproject.api.auth:develop-20260712-225417-2a37f0b9"
+
 resources:
   limits:
     memory: 160Mi
     cpu: 500m
   requests:
-    memory: 100Mi
-    cpu: 50m
+    memory: 140Mi
+    cpu: 100m
+
 ingress:
   enabled: true
   rules:
@@ -19,3 +21,6 @@ ingress:
           pathType: Prefix
         - path: /oauth2
           pathType: Prefix
+
+hpa:
+  enabled: true

@@ -1,12 +1,15 @@
 nameOverride: tier9-abo-slime
+
 image: abo.slime:master-20260702-211931-c906880c
+
 resources:
   limits:
-    memory: 350Mi
+    memory: 300Mi
     cpu: 500m
   requests:
-    memory: 290Mi
+    memory: 260Mi
     cpu: 50m
+
 extraEnvValues:
   - name: BOT_TOKEN
     valueFrom:
@@ -28,6 +31,7 @@ extraEnvValues:
       secretKeyRef:
         name: tier9-abo-slime
         key: GOOGLE_SERVICE_ACCOUNT
+
 externalSecret:
   name: tier9-abo-slime
   values:
