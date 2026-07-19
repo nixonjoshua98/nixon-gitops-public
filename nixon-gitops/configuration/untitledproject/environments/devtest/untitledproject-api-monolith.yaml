@@ -1,6 +1,6 @@
 nameOverride: untitledproject-api-monolith
 
-image: "untitledproject.api.monolith:develop-20260715-205307-0dac474f"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.monolith:develop-20260716-203232-4e9ced49"
 
 resources:
   limits:

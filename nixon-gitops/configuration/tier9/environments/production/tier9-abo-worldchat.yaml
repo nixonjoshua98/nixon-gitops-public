@@ -1,6 +1,6 @@
 nameOverride: tier9-abo-worldchat
 
-image: abo.worldchat:master-20260702-211835-c906880c
+image: sharedpersonalcontaineregistry.azurecr.io/abo.worldchat:master-20260702-211835-c906880c
 
 resources:
   limits:

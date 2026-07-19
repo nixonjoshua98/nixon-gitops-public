@@ -1,6 +1,6 @@
 nameOverride: tier9-abo-slime
 
-image: abo.slime:master-20260702-211931-c906880c
+image: sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260702-211931-c906880c
 
 resources:
   limits:

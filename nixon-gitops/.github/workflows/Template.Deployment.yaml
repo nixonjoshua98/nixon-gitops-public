@@ -1,4 +1,4 @@
-name: Template.Update.Deployment.Image
+name: Template.Deployment
 
 on:
   workflow_call:

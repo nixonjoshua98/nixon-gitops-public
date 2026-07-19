@@ -1,6 +1,6 @@
 nameOverride: gm-api-monolith
 
-image: gm.api.monolith:master-20260704-215559-c7c62ae0
+image: sharedpersonalcontaineregistry.azurecr.io/gm.api.monolith:master-20260704-215559-c7c62ae0
 
 resources:
   limits:

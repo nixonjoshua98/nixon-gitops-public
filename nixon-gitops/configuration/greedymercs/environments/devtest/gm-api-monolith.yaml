@@ -1,6 +1,6 @@
 nameOverride: gm-api-monolith
 
-image: "gm.api.monolith:develop-compat-20260712-175423-6a749433"
+image: "sharedpersonalcontaineregistry.azurecr.io/gm.api.monolith:develop-compat-20260712-175423-6a749433"
 
 resources:
   limits:

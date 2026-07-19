@@ -1,5 +1,5 @@
 nameOverride: tier9-abo-api
-image: abo.api:master-20260702-211938-c906880c
+image: sharedpersonalcontaineregistry.azurecr.io/abo.api:master-20260702-211938-c906880c
 resources:
   limits:
     memory: 150Mi

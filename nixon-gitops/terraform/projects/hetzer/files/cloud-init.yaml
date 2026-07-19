@@ -1,0 +1,19 @@
+#cloud-config
+
+# /var/log/cloud-init-output.log
+
+package_reboot_if_required: true
+
+package_update: true
+
+package_upgrade: true
+
+timezone: UTC
+
+locale: en_US.UTF-8
+
+runcmd:
+  - echo "Bringing up Hetzner network link"
+  - sudo ip link set enp7s0 up 
+
+  - echo "cloud-init completed"

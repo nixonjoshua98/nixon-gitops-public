@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "explorer.compactFolders": false,
+    "editor.indentSize": 2,
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/.terraform": true,
+      "**/.terraform.lock.hcl": true,
+      "**/terraform.tfstate.backup": true,
+      "**/terraform.tfstate.*.backup": true,
+      "**/.terraform.tfstate.lock.info": true,
+    },
+  },
+}

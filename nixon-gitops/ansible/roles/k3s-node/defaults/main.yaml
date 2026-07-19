@@ -1,20 +1,22 @@
 k3s_installer_url: "https://get.k3s.io"
 
-k3s_installer_path: "/tmp/get.k3s.io"
+k3s_installer_path: "/tmp/k3s-installer.sh"
 
 k3s_version: "v1.36.2+k3s1"
 
+k3s_binary_path: "/tmp/k3s-binary-{{ k3s_version }}"
+
+k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s"
+
 k3s_binary_install_path: "/usr/local/bin/k3s"
 
-k3s_cluster_port: "6443"
-
-k3s_static_args:
+k3s_common_install_args:
   - "--flannel-iface=enp7s0"
   - "--kubelet-arg=max-pods=20"
   - "--kubelet-arg=kube-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
   - "--kubelet-arg=system-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
 
-k3s_controlplane_args:
+k3s_controlplane_install_args:
   - "--disable-cloud-controller"
   - "--disable traefik"
   - "--write-kubeconfig-mode 644"

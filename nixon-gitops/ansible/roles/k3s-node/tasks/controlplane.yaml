@@ -5,12 +5,12 @@
         '--cluster-init', 
         '--tls-san ' + inventory_hostname, 
         '--node-external-ip ' + inventory_hostname
-      ] + k3s_controlplane_args + k3s_static_args 
+      ] + k3s_controlplane_install_args + k3s_common_install_args 
       }}
 
 - name: Build install command
   ansible.builtin.set_fact:
-    k3s_install_command: "INSTALL_K3S_VERSION=\"{{ k3s_version }}\" INSTALL_K3S_EXEC=\"{{ _k3s_exec_args | join(' ') }}\" sh {{ k3s_installer_path }}"
+    k3s_install_command: "INSTALL_K3S_SKIP_DOWNLOAD=true INSTALL_K3S_VERSION=\"{{ k3s_version }}\" INSTALL_K3S_EXEC=\"{{ _k3s_exec_args | join(' ') }}\" sh {{ k3s_installer_path }}"
 
 - name: Log install command
   ansible.builtin.debug:

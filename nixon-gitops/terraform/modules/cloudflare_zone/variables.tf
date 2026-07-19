@@ -14,6 +14,7 @@ variable "records" {
 
 variable "redirects" {
   type = list(object({
+    description           = optional(string, "")
     request_url           = string
     target_url            = string
     status_code           = number

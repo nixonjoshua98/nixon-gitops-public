@@ -18,11 +18,6 @@
     upgrade: dist
     lock_timeout: 60
 
-- name: Remove unused packages
-  ansible.builtin.apt:
-    autoremove: true
-    lock_timeout: 60
-
 - name: Check whether a reboot is required
   ansible.builtin.stat:
     path: /var/run/reboot-required

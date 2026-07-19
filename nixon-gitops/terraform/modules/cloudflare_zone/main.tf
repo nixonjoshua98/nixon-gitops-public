@@ -20,9 +20,9 @@ resource "cloudflare_ruleset" "dynamic_redirects" {
 
   rules = [
     for redirect in var.redirects : {
-      action     = "redirect"
-      expression = "(http.request.full_uri wildcard r\"${redirect.request_url}\")"
-
+      action      = "redirect"
+      expression  = "(http.request.full_uri wildcard r\"${redirect.request_url}\")"
+      description = redirect.description
       action_parameters = {
         from_value = {
           status_code           = redirect.status_code
