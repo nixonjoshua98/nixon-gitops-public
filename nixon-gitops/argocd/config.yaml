@@ -1,18 +1,31 @@
 appSetValues:
   - APPSET_NAME: greedymercs-appset
+    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
     ARGO_FILE_PATH: argocd/workloads/greedymercs-*.yaml
     VALUE_FILES:
+      - /configuration/base/values.yaml
       - /configuration/greedymercs/environments/{{ .environment }}/values.yaml
       - /configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: tier9-appset
+    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
     ARGO_FILE_PATH: argocd/workloads/tier9-*.yaml
     VALUE_FILES:
+      - /configuration/base/values.yaml
       - /configuration/tier9/environments/{{ .environment }}/values.yaml
       - /configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: untitledproject-appset
+    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
     ARGO_FILE_PATH: argocd/workloads/untitledproject-*.yaml
     VALUE_FILES:
+      - /configuration/base/values.yaml
       - /configuration/untitledproject/environments/{{ .environment }}/values.yaml
       - /configuration/untitledproject/environments/{{ .environment }}/{{ .name }}.yaml
+
+  - APPSET_NAME: cluster-appset
+    NAME_TEMPLATE: "{{ .name }}"
+    ARGO_FILE_PATH: argocd/workloads/cluster.yaml
+    VALUE_FILES:
+      - /configuration/base/values.yaml
+      - /configuration/cluster/helm-release-checker.yaml

@@ -1,17 +1,19 @@
 $ErrorActionPreference = "Stop"
 
-$tempParent = [System.IO.Path]::GetTempPath()
-$tempGuid   = [System.Guid]::NewGuid().ToString()
-$tempDir    = Join-Path -Path $tempParent -ChildPath $tempGuid
+$workspaceRoot = $PSScriptRoot
+$tempGuid      = [System.Guid]::NewGuid().ToString()
+$tempDir       = Join-Path -Path $workspaceRoot -ChildPath (".nixon-gitops.tmp." + $tempGuid)
 
-New-Item -ItemType Directory -Path $tempDir
+New-Item -ItemType Directory -Path $tempDir | Out-Null
 
 git clone "https://github.com/nixonjoshua98/nixon-gitops.git" $tempDir
 
-$destinationPath = "./nixon-gitops"
+$destinationPath = Join-Path -Path $workspaceRoot -ChildPath "nixon-gitops"
 
 if (Test-Path -Path $destinationPath) {
     Remove-Item -Path $destinationPath -Recurse -Force
 }
 
-Move-Item -Path $tempDir -Destination $destinationPath
+Copy-Item -Path $tempDir -Destination $destinationPath -Recurse -Force
+
+Remove-Item -Path $tempDir -Recurse -Force

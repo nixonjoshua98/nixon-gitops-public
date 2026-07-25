@@ -1,0 +1,12 @@
+nameOverride: "helm-release-checker"
+
+image: "sharedpersonalcontaineregistry.azurecr.io/helm-release-checker:main-20260725-114856-80fe2402"
+
+schedule: "0 12 * * *"
+
+rbac:
+  create: true
+  rules:
+    - apiGroups: [""]
+      resources: ["secrets", "configmaps"]
+      verbs: ["get", "list"]

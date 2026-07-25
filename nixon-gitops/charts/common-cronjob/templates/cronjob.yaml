@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "common-cronjob.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "common-cronjob.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "common-cronjob.serviceAccountName" . }}
+{{- if .Values.imagePullSecret }}
+          imagePullSecrets:
+            - name: {{ .Values.imagePullSecret }}
+{{- end }}
+          restartPolicy: Never
+          containers:
+            - name: {{ include "common-cronjob.name" . }}
+              image: {{ .Values.image | quote }}
+              imagePullPolicy: IfNotPresent
+              resources:
+{{- toYaml .Values.resources | nindent 16 }}
+{{- if .Values.extraEnvValues }}
+              env:
+{{- toYaml .Values.extraEnvValues | nindent 16 }}
+{{- end }}

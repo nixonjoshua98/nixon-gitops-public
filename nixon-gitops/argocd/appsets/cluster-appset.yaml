@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: greedymercs-appset
+  name: cluster-appset
   namespace: argocd
   labels:
     custom.kubernetes.io/is-adhoc: "true"
@@ -16,14 +16,14 @@ spec:
               repoURL: https://github.com/nixonjoshua98/nixon-gitops.git
               revision: main
               files:
-                - path: "argocd/workloads/greedymercs-*.yaml"
+                - path: "argocd/workloads/cluster.yaml"
           - list:
               elementsYaml: "{{ .components | toJson }}"
   template:
     metadata:
-      name: "{{ .name }}-{{ .environment }}"
+      name: "{{ .name }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/common-deployable;/charts/cnpg-cluster;/argocd/workloads/greedymercs-*.yaml;/configuration/base/values.yaml;/configuration/greedymercs/environments/{{ .environment }}/values.yaml;/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/common-cronjob;/argocd/workloads/cluster.yaml;/configuration/base/values.yaml;/configuration/cluster/helm-release-checker.yaml"
     spec:
       project: default
       source:
@@ -31,9 +31,9 @@ spec:
         targetRevision: main
         path: "{{ .chart }}"
         helm:
-          releaseName: "{{ .name }}-{{ .environment }}"
+          releaseName: "{{ .name }}"
           ignoreMissingValueFiles: false
-          valueFiles: ["/configuration/base/values.yaml", "/configuration/greedymercs/environments/{{ .environment }}/values.yaml", "/configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml"]
+          valueFiles: ["/configuration/base/values.yaml", "/configuration/cluster/helm-release-checker.yaml"]
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"

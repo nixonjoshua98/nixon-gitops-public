@@ -1,9 +1,6 @@
 dotNetEnvironment: DevTest
 
 nameOverride: untitledproject-api-auth
-
-imagePullSecret: registry-secret
-
 containerPorts:
   http:
     enabled: true

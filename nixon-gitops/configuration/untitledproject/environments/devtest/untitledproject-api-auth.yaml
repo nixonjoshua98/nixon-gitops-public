@@ -1,6 +1,6 @@
 nameOverride: untitledproject-api-auth
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260712-225417-2a37f0b9"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260724-214532-c4388ddc"
 
 resources:
   limits:

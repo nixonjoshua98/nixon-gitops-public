@@ -3,7 +3,4 @@ dotNetEnvironment: Production
 secretStore:
   name: tier9-secretstore
   refreshInterval: 12h
-  
-imagePullSecret: registry-secret
-
 clusterIssuer: selfsigned-clusterissuer

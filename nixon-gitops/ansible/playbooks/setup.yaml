@@ -1,13 +1,17 @@
+- name: Process all servers
+  hosts: all
+  become: true
+  roles:
+    - server
+
 - name: Process controlplanes
   hosts: controlplane
   become: true
   roles:
-    - server
     - k3s-node
 
 - name: Process agents
   hosts: agent
   become: true
   roles:
-    - server
     - k3s-node

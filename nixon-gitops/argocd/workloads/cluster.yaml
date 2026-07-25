@@ -1,0 +1,5 @@
+namespace: default
+
+components:
+  - name: helm-release-checker
+    chart: charts/common-cronjob

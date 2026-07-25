@@ -21,7 +21,7 @@ spec:
               elementsYaml: "{{ .components | toJson }}"
   template:
     metadata:
-      name: "{{ .name }}-{{ .environment }}"
+      name: "$(NAME_TEMPLATE)"
       annotations:
         argocd.argoproj.io/manifest-generate-paths: "$(MANIFEST_GENERATE_PATHS)"
     spec:
@@ -31,7 +31,7 @@ spec:
         targetRevision: main
         path: "{{ .chart }}"
         helm:
-          releaseName: "{{ .name }}-{{ .environment }}"
+          releaseName: "$(NAME_TEMPLATE)"
           ignoreMissingValueFiles: false
           valueFiles: $(VALUE_FILES)
       destination:

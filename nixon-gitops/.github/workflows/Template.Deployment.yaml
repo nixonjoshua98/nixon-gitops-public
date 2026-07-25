@@ -4,15 +4,19 @@ on:
   workflow_call:
     inputs:
       environment:
-        required: true
+        required: false
         type: string
 
       project:
-        required: true
+        required: false
         type: string
 
       action:
-        required: true
+        required: false
+        type: string
+
+      file_path:
+        required: false
         type: string
 
       image:
@@ -33,14 +37,20 @@ jobs:
       PROJECT: ${{ inputs.project }}
       ENVIRONMENT: ${{ inputs.environment }}
       ACTION: ${{ inputs.action }}
+      FILE_PATH: ${{ inputs.file_path }}
       IMAGE: ${{ inputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set $FILE_PATH_LOWER
+      - name: Resolve target file path
         run: |
-          FILE_PATH_LOWER="configuration/${PROJECT,,}/environments/${ENVIRONMENT,,}/$(echo "${ACTION,,}" | tr '.' '-').yaml"
+          if [[ -n "$FILE_PATH" ]]; then
+            FILE_PATH_LOWER="$FILE_PATH"
+          else
+            FILE_PATH_LOWER="configuration/${PROJECT,,}/environments/${ENVIRONMENT,,}/$(echo "${ACTION,,}" | tr '.' '-').yaml"
+          fi
+
           echo "FILE_PATH_LOWER=${FILE_PATH_LOWER}" >>${GITHUB_ENV}
 
       - name: Update image
@@ -53,6 +63,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add "$FILE_PATH_LOWER"
-          git commit -m "chore: updated image for ${PROJECT}/${ACTION}" || echo "No changes to commit"
+
+          git commit -m "chore: Updated ${FILE_PATH_LOWER}" || echo "No changes to commit"
           git pull --rebase origin
           git push
