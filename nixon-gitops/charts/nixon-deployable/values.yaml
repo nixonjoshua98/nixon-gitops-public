@@ -1,0 +1,53 @@
+ingress:
+  enabled: false
+
+replicaCount: 1
+
+extraEnvValues: []
+
+extraVolumes: []
+
+extraVolumeMounts: []
+
+persistence:
+  enabled: false
+  claimName: null
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClassName: null
+
+service:
+  enabled: false
+  ports:
+    http:
+      enabled: false
+      port: 8080
+      targetPort: http
+      protocol: TCP
+    metrics:
+      enabled: false
+      port: 9182
+      targetPort: http
+      protocol: TCP
+
+imagePullSecret: null
+
+containerPorts:
+  http:
+    enabled: false
+    containerPort: 8080
+  metrics:
+    enabled: false
+    containerPort: 9182
+
+serviceMonitor:
+  enabled: false
+
+dotNetEnvironment: null
+
+hpa:
+  enabled: false
+
+readinessProbe:
+  enabled: false

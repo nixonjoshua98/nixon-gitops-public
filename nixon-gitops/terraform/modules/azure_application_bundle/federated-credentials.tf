@@ -1,27 +1,31 @@
 locals {
   federated_credential_list = flatten([
-    for credential in var.federated_credentials : [
-      for branch in credential.branches : {
-        key          = format("github-%s-%s-%s", credential.organisation, credential.repository, branch)
-        organisation = credential.organisation
-        repository   = credential.repository
-        branch       = branch
-        audience     = ["api://AzureADTokenExchange"]
+    for credential in var.federated_credentials : credential.kubernetes_namespace != null ? [
+      for serviceaccount in credential.kubernetes_namespace.serviceaccounts : {
+        key     = format("kubernetes-%s-%s", credential.kubernetes_namespace.namespace, serviceaccount)
+        subject = format("system:serviceaccount:%s:%s", credential.kubernetes_namespace.namespace, serviceaccount)
+        issuer  = credential.kubernetes_namespace.issuer
+      }
+      ] : credential.subject_identifier != null ? [
+      {
+        key     = format("federated-credential-%s", substr(sha1(credential.subject_identifier), 0, 8))
+        subject = credential.subject_identifier
+        issuer  = credential.issuer
+      }
+      ] : [
+      for branch in credential.github.branches : {
+        key     = format("github-%s-%s-%s", credential.github.organisation, credential.github.repository, branch)
+        subject = format("repo:%s/%s:ref:refs/heads/%s", credential.github.organisation, credential.github.repository, branch)
+        issuer  = "https://token.actions.githubusercontent.com"
       }
     ]
   ])
 
   federated_credential_map = {
     for item in local.federated_credential_list : item.key => {
-      organisation = item.organisation
-      repository   = item.repository
-      branch       = item.branch
-      audience     = item.audience
+      subject   = item.subject
+      issuer    = item.issuer
     }
-  }
-
-  federated_subjects = {
-    for key, credential in local.federated_credential_map : key => format("repo:%s/%s:ref:refs/heads/%s", credential.organisation, credential.repository, credential.branch)
   }
 }
 
@@ -30,7 +34,7 @@ resource "azuread_application_federated_identity_credential" "this" {
 
   application_id = azuread_application.this.id
   display_name   = each.key
-  issuer         = "https://token.actions.githubusercontent.com"
-  subject        = local.federated_subjects[each.key]
-  audiences      = each.value.audience
+  issuer         = each.value.issuer
+  subject        = each.value.subject
+  audiences      = ["api://AzureADTokenExchange"]
 }

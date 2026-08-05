@@ -28,7 +28,7 @@ jobs:
   deploy:
     needs:
       - build
-    uses: ./.github/workflows/Template.Deployment.yaml
+    uses: ./.github/workflows/Template.UpdateImage.yaml
     with:
       file_path: "configuration/cluster/helm-release-checker.yaml"
       image: ${{ needs.build.outputs.image }}

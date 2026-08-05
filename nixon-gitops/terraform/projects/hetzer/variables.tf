@@ -19,14 +19,12 @@ variable "hcloud_server_pools" {
   type = list(object({
     name            = string
     node_type       = string
-    count           = number,
+    count           = number
     image           = string
     labels          = optional(map(string))
     ipv4_enabled    = optional(bool, true)
     enable_network  = optional(bool, true)
-    network_name    = optional(string, "k3s-cluster-network")
-    subnet_name     = optional(string, "default-subnet")
-    cloud_init_file = optional(string, "cloud-init.yaml")
+    location        = optional(string, "fsn1")
   }))
   default = []
 }
@@ -41,7 +39,6 @@ variable "hcloud_firewall_rules" {
     description = string
     protocol    = string
     port        = optional(string)
-    internal    = optional(bool, false)
     public      = optional(bool, false)
   }))
   default = []

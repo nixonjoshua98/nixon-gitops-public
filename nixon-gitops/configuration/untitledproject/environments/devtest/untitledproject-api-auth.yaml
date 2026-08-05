@@ -1,14 +1,16 @@
 nameOverride: untitledproject-api-auth
 
-image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260724-214532-c4388ddc"
+image: "sharedpersonalcontaineregistry.azurecr.io/untitledproject.api.auth:develop-20260803-183205-4f64d244"
+
+dotNetEnvironment: DevTest
 
 resources:
+  requests:
+    memory: 140Mi
+    cpu: 50m
   limits:
     memory: 180Mi
     cpu: 500m
-  requests:
-    memory: 140Mi
-    cpu: 100m
 
 ingress:
   enabled: true

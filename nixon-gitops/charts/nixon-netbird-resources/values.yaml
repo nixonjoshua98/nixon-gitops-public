@@ -1,0 +1,6 @@
+networkRouter:
+  name: default-cluster-router
+  dnsZoneRef: nixon.cluster
+
+credentialSecret:
+  name: netbird-credential

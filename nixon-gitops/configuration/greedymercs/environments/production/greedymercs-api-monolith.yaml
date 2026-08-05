@@ -1,0 +1,51 @@
+nameOverride: greedymercs-api-monolith
+
+image: "sharedpersonalcontaineregistry.azurecr.io/greedymercs.api.monolith:master-20260801-221848-8be64351"
+
+resources:
+  requests:
+    memory: 240Mi
+    cpu: 50m
+  limits:
+    memory: 280Mi
+    cpu: 500m
+
+extraEnvValues:
+  - name: PG_PASSWORD
+    externalSecretKeyRef:
+      key: GM-PG-USER-WEB
+
+  - name: Auth__DiscordClientSecret
+    externalSecretKeyRef:
+      key: GM-DISCORD-CLIENT-SECRET
+
+  - name: Auth__GoogleClientSecret
+    externalSecretKeyRef:
+      key: GM-GOOGLE-CLIENT-SECRET
+
+containerPorts:
+  http:
+    enabled: true
+
+readinessProbe:
+  enabled: true
+
+service:
+  enabled: true
+  ports:
+    http:
+      enabled: true
+
+ingress:
+  enabled: true
+  rules:
+    - host: api.greedymercs.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: auth.greedymercs.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+dotNetEnvironment: Production

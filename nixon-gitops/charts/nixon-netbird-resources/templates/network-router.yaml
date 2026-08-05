@@ -1,0 +1,12 @@
+apiVersion: netbird.io/v1alpha1
+kind: NetworkRouter
+metadata:
+  name: {{ .Values.networkRouter.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "nixon-netbird-resources.labels" . | indent 4 }}
+spec:
+  dnsZoneRef:
+    name: {{ .Values.networkRouter.dnsZoneRef }}
+  workloadOverride:
+    replicas: 1

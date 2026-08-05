@@ -1,0 +1,7 @@
+environment: production
+
+namespace: koruxa-production
+
+components:
+  - name: koruxa-discordbot
+    chart: charts/nixon-deployable

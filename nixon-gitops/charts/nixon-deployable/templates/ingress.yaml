@@ -1,0 +1,26 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "nixon-deployable.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "nixon-deployable.labels" . | nindent 4 }}
+spec:
+  ingressClassName: traefik
+  rules:
+{{- range $rule := .Values.ingress.rules }}
+    - host: {{ $rule.host }}
+      http:
+        paths:
+{{- range $path := $rule.paths }}
+          - path: {{ $path.path }}
+            pathType: {{ $path.pathType }}
+            backend:
+              service:
+                name: {{ include "nixon-deployable.name" $ }}
+                port:
+                  name: http
+{{- end }}
+{{- end }}
+{{- end }}

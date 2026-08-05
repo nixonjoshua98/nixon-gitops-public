@@ -23,7 +23,7 @@ spec:
     metadata:
       name: "{{ .name }}"
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: "/charts/common-cronjob;/argocd/workloads/cluster.yaml;/configuration/base/values.yaml;/configuration/cluster/helm-release-checker.yaml"
+        argocd.argoproj.io/manifest-generate-paths: "/charts/nixon-cronjob;/argocd/workloads/cluster.yaml;/configuration/base/values.yaml;/configuration/cluster/{{ .name }}.yaml"
     spec:
       project: default
       source:
@@ -33,7 +33,7 @@ spec:
         helm:
           releaseName: "{{ .name }}"
           ignoreMissingValueFiles: false
-          valueFiles: ["/configuration/base/values.yaml", "/configuration/cluster/helm-release-checker.yaml"]
+          valueFiles: ["/configuration/base/values.yaml", "/configuration/cluster/{{ .name }}.yaml"]
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{ .namespace }}"

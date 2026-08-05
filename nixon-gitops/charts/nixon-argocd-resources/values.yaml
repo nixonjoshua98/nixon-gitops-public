@@ -1,0 +1,3 @@
+repositorySecret:
+  name: gitops-repository-credential
+  vaultName: cluster-secretstore

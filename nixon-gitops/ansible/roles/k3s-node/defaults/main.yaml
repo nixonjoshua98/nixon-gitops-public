@@ -11,10 +11,10 @@ k3s_binary_url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version 
 k3s_binary_install_path: "/usr/local/bin/k3s"
 
 k3s_common_install_args:
-  - "--flannel-iface=enp7s0"
-  - "--kubelet-arg=max-pods=20"
-  - "--kubelet-arg=kube-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
-  - "--kubelet-arg=system-reserved=cpu=100m,memory=200Mi,ephemeral-storage=3Gi"
+  - "--flannel-iface=wt0"
+  - "--kubelet-arg=max-pods=100"
+  - "--kubelet-arg=kube-reserved=cpu=200m,memory=300Mi,ephemeral-storage=5Gi"
+  - "--kubelet-arg=system-reserved=cpu=200m,memory=300Mi,ephemeral-storage=5Gi"
 
 k3s_controlplane_install_args:
   - "--disable-cloud-controller"

@@ -4,10 +4,10 @@ namespace: untitledproject-devtest
 
 components:
   - name: untitledproject-api-monolith
-    chart: charts/common-deployable
+    chart: charts/nixon-deployable
 
   - name: untitledproject-api-auth
-    chart: charts/common-deployable
+    chart: charts/nixon-deployable
 
   - name: untitledproject-postgresql
-    chart: charts/cnpg-cluster
+    chart: charts/nixon-cnpg-cluster

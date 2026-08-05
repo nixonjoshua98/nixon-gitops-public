@@ -3,11 +3,8 @@ nixon-gitops/ansible/inventory.ini
 
 nixon-gitops/helm/values
 
-nixon-gitops/charts/cluster-resources/values.yaml
-
-nixon-gitops/scripts
-
-nixon-gitops/manifests
+nixon-gitops/charts/nixon-cluster-resources/values.yaml
+nixon-gitops/charts/nixon-external-secrets-resources/values.yaml
 
 nixon-gitops/.gitattributes
 nixon-gitops/.devcontainer
@@ -16,6 +13,7 @@ nixon-gitops/.archived
 nixon-gitops/.git
 
 nixon-gitops/configuration/**/*-postgresql.yaml
+nixon-gitops/configuration/base/values.yaml
 
 nixon-gitops/terraform/**/vars.auto.tfvars
 nixon-gitops/terraform/**/*.tfstate

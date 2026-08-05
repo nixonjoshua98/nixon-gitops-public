@@ -3,8 +3,8 @@ environment: production
 namespace: greedymercs-production
 
 components:
-  - name: gm-api-monolith
-    chart: charts/common-deployable
+  - name: greedymercs-api-monolith
+    chart: charts/nixon-deployable
 
-  - name: gm-postgresql
-    chart: charts/cnpg-cluster
+  - name: greedymercs-postgresql
+    chart: charts/nixon-cnpg-cluster

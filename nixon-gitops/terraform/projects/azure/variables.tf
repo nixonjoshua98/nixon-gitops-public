@@ -31,8 +31,9 @@ variable "azure_container_registries" {
 
 variable "azure_storage_accounts" {
   type = list(object({
-    name                = string
-    resource_group_name = string
+    name                  = string
+    resource_group_name   = string
+    rbac_role_assignments = optional(map(list(string)), {})
   }))
 }
 
@@ -46,9 +47,19 @@ variable "azure_applications" {
     name           = string
     client_secrets = optional(list(string), [])
     federated_credentials = optional(list(object({
-      organisation = optional(string)
-      repository   = optional(string)
-      branches     = optional(list(string))
+      subject_identifier = optional(string)
+      issuer             = optional(string)
+      kubernetes_namespace = optional(object({
+        namespace       = string
+        issuer          = string
+        serviceaccounts = list(string)
+      }))
+
+      github = optional(object({
+        organisation = string
+        repository   = string
+        branches     = list(string)
+      }))
     })), [])
   }))
   default = []

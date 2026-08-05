@@ -3,15 +3,24 @@ variable "display_name" {
 }
 
 variable "client_secrets" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "federated_credentials" {
   type = list(object({
-    organisation = string
-    repository   = string
-    branches     = list(string)
+    subject_identifier = optional(string)
+    issuer             = optional(string)
+    kubernetes_namespace = optional(object({
+      namespace       = string
+      issuer          = string
+      serviceaccounts = list(string)
+    }))
+    github = optional(object({
+      organisation = string
+      repository   = string
+      branches     = list(string)
+    }))
   }))
   default = []
 }

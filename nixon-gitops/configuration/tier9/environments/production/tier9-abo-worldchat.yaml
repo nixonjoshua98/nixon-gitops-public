@@ -1,45 +1,30 @@
 nameOverride: tier9-abo-worldchat
 
-image: sharedpersonalcontaineregistry.azurecr.io/abo.worldchat:master-20260702-211835-c906880c
+dotNetEnvironment: Production
+
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.worldchat:master-20260804-205957-1fbe5f9f"
 
 resources:
-  limits:
-    memory: 180Mi
-    cpu: 500m
   requests:
     memory: 140Mi
     cpu: 50m
+  limits:
+    memory: 180Mi
+    cpu: 500m
 
 extraEnvValues:
   - name: BOT_TOKEN
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-worldchat
-        key: BOT_TOKEN
+    externalSecretKeyRef:
+      key: ABO-WORLDCHAT-TOKEN
+
   - name: PG_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-worldchat
-        key: PG_PASSWORD
+    externalSecretKeyRef:
+      key: ABO-PG-USER-WEB
+
   - name: OPENAI_KEY
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-worldchat
-        key: OPENAI_KEY
+    externalSecretKeyRef:
+      key: ABO-OPENAI-KEY
+
   - name: T9_GOOGLE_SERVICE_ACCOUNT
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-worldchat
-        key: GOOGLE_SERVICE_ACCOUNT
-        
-externalSecret:
-  name: tier9-abo-worldchat
-  values:
-    - secretKey: BOT_TOKEN
-      remoteRefKey: WORLD-CHAT-BOT-TOKEN
-    - secretKey: OPENAI_KEY
-      remoteRefKey: OPENAI-KEY
-    - secretKey: PG_PASSWORD
-      remoteRefKey: PG-WEB-USER-PW
-    - secretKey: GOOGLE_SERVICE_ACCOUNT
-      remoteRefKey: GOOGLE-SERVICE-ACCOUNT
+    externalSecretKeyRef:
+      key: ABO-GOOGLESERVICEACCOUNT

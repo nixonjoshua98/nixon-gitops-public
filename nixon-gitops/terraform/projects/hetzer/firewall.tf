@@ -15,11 +15,10 @@ resource "hcloud_firewall" "this" {
       direction   = "in"
       protocol    = rule.value.protocol
       port        = rule.value.port
-
-      source_ips = (
-        rule.value.internal ?
-          local.created_server_ips :
-          rule.value.public ? concat(local.machine_ips, local.cloudflare_ips) : concat(local.machine_ips)
+      source_ips  = (
+        rule.value.public ? 
+          concat(local.machine_ips, local.created_server_ips, local.cloudflare_ips) :
+          concat(local.machine_ips, local.created_server_ips)
       )
     }
   }

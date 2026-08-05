@@ -1,8 +1,14 @@
 nameOverride: "helm-release-checker"
 
-image: "sharedpersonalcontaineregistry.azurecr.io/helm-release-checker:main-20260725-114856-80fe2402"
+image: "sharedpersonalcontaineregistry.azurecr.io/helm-release-checker:main-20260729-220059-5c8c84e5"
 
 schedule: "0 12 * * *"
+
+suspend: true
+
+extraEnvValues:
+  - name: ALERTMANAGER_HOST
+    value: http://alertmanager-operated.monitoring.svc.cluster.local:9093
 
 rbac:
   create: true

@@ -1,0 +1,12 @@
+bootstrap:
+  mode: recovery
+
+postgresUserPassword: null
+
+objectStore:
+  enabled: false
+
+externalObjectStore:
+  enabled: false
+
+databaseRoles: []

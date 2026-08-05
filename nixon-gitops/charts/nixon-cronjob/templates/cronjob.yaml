@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "nixon-cronjob.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "nixon-cronjob.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  timeZone: "Etc/UTC"
+  successfulJobsHistoryLimit: 1
+  suspend: {{ .Values.suspend }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "nixon-cronjob.serviceAccountName" . }}
+{{- if .Values.imagePullSecret }}
+          imagePullSecrets:
+            - name: {{ .Values.imagePullSecret }}
+{{- end }}
+          restartPolicy: Never
+          containers:
+            - name: {{ include "nixon-cronjob.name" . }}
+              image: {{ .Values.image | quote }}
+              imagePullPolicy: IfNotPresent
+              resources:
+{{- toYaml .Values.resources | nindent 16 }}
+{{- if .Values.extraEnvValues }}
+              env:
+{{- toYaml .Values.extraEnvValues | nindent 16 }}
+{{- end }}

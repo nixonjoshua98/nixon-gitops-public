@@ -17,44 +17,73 @@ repositories:
     url: https://traefik.github.io/charts
 
 helmDefaults:
-  historyMax: 5
+  historyMax: 1
 
 releases:
-  # - name: cluster-resources
-  #   namespace: argocd
-  #   chart: ../charts/cluster-resources
-  #   needs:
-  #     - argocd/argocd
-  #     - cert-manager/cert-manager
-  #     - external-secrets/external-secrets
-  #   values:
-  #     - ../configuration/base/values.yaml
+  - name: nixon-netbird-resources
+    namespace: netbird
+    chart: ../charts/nixon-netbird-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - netbird/netbird-operator
+      - external-secrets/external-secrets
 
-  ###################
-  # ArgoCD
+  - name: nixon-external-secrets-resources
+    namespace: external-secrets
+    chart: ../charts/nixon-external-secrets-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - external-secrets/external-secrets
+
+  - name: nixon-cluster-resources
+    namespace: default
+    chart: ../charts/nixon-cluster-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - cert-manager/cert-manager
+      - external-secrets/nixon-external-secrets-resources
+
+  - name: nixon-argocd-resources
+    namespace: argocd
+    chart: ../charts/nixon-argocd-resources
+    values:
+      - ../configuration/base/values.yaml
+    needs:
+      - argocd/argocd
+      - external-secrets/nixon-external-secrets-resources
+
+  - name: netbird-operator
+    namespace: netbird
+    chart: oci://ghcr.io/netbirdio/helm-charts/netbird-operator
+    version: 0.8.0
+    values:
+      - values/netbird-operator.yaml
+    needs:
+      - cert-manager/cert-manager
 
   - name: argocd
     namespace: argocd
     chart: argo/argo-cd
-    version: 10.2.1
+    version: 10.3.0
     values:
       - values/argocd.yaml
-
-  ###################
 
   - name: cert-manager
     namespace: cert-manager
     chart: jetstack/cert-manager
     version: v1.21.0
-    needs:
-      - monitoring/kube-prometheus-stack
     values:
       - values/cert-manager.yaml
+    needs:
+      - monitoring/kube-prometheus-stack
 
   - name: traefik
     namespace: traefik
     chart: traefik/traefik
-    version: 41.0.2
+    version: 41.1.0
     values:
       - values/traefik.yaml
 
@@ -62,18 +91,15 @@ releases:
     namespace: external-secrets
     chart: external-secrets/external-secrets
     version: 2.8.0
-    needs:
-      - cert-manager/cert-manager
     values:
       - values/external-secrets.yaml
-
-  ###################
-  # Monitoring
+    needs:
+      - cert-manager/cert-manager
 
   - name: kube-prometheus-stack
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
-    version: 87.19.1
+    version: 88.1.5
     values:
       - values/prometheus.yaml
 
@@ -93,9 +119,6 @@ releases:
   #   values:
   #     - values/grafana-alloy.yaml
 
-  ###################
-  # CNPG
-
   - name: cnpg
     namespace: cnpg-system
     chart: cnpg/cloudnative-pg
@@ -111,9 +134,6 @@ releases:
       - cnpg-system/cnpg
       - cert-manager/cert-manager
 
-  ###################
-  # Hetzner
-
   - name: hcloud-ccm
     namespace: kube-system
     chart: hcloud/hcloud-cloud-controller-manager
@@ -121,9 +141,7 @@ releases:
     values:
       - values/hcloud-ccm.yaml
 
-  # - name: hcloud-csi
-  #   namespace: kube-system
-  #   chart: hcloud/hcloud-csi
-  #   version: 2.20.0
-  #   values:
-  #     - values/hcloud-csi.yaml
+  - name: hcloud-csi
+    namespace: kube-system
+    chart: hcloud/hcloud-csi
+    version: 2.22.0

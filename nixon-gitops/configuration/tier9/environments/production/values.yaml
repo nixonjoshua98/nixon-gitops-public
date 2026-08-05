@@ -1,6 +1,0 @@
-dotNetEnvironment: Production
-
-secretStore:
-  name: tier9-secretstore
-  refreshInterval: 12h
-clusterIssuer: selfsigned-clusterissuer

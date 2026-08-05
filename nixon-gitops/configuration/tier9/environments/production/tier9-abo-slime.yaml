@@ -1,45 +1,30 @@
 nameOverride: tier9-abo-slime
 
-image: sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260702-211931-c906880c
+dotNetEnvironment: Production
+
+image: "sharedpersonalcontaineregistry.azurecr.io/abo.slime:master-20260804-205956-1fbe5f9f"
 
 resources:
-  limits:
-    memory: 300Mi
-    cpu: 500m
   requests:
-    memory: 260Mi
+    memory: 250Mi
     cpu: 50m
+  limits:
+    memory: 290Mi
+    cpu: 500m
 
 extraEnvValues:
   - name: BOT_TOKEN
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-slime
-        key: BOT_TOKEN
-  - name: PG_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-slime
-        key: PG_PASSWORD
-  - name: OPENAI_KEY
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-slime
-        key: OPENAI_KEY
-  - name: T9_GOOGLE_SERVICE_ACCOUNT
-    valueFrom:
-      secretKeyRef:
-        name: tier9-abo-slime
-        key: GOOGLE_SERVICE_ACCOUNT
+    externalSecretKeyRef:
+      key: ABO-SLIME-TOKEN
 
-externalSecret:
-  name: tier9-abo-slime
-  values:
-    - secretKey: BOT_TOKEN
-      remoteRefKey: SLIME-BOT-TOKEN
-    - secretKey: OPENAI_KEY
-      remoteRefKey: OPENAI-KEY
-    - secretKey: PG_PASSWORD
-      remoteRefKey: PG-WEB-USER-PW
-    - secretKey: GOOGLE_SERVICE_ACCOUNT
-      remoteRefKey: GOOGLE-SERVICE-ACCOUNT
+  - name: PG_PASSWORD
+    externalSecretKeyRef:
+      key: ABO-PG-USER-WEB
+
+  - name: OPENAI_KEY
+    externalSecretKeyRef:
+      key: ABO-OPENAI-KEY
+
+  - name: T9_GOOGLE_SERVICE_ACCOUNT
+    externalSecretKeyRef:
+      key: ABO-GOOGLESERVICEACCOUNT

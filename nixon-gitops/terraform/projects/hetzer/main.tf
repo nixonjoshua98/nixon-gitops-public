@@ -19,13 +19,15 @@ locals {
       node_type       = sp.node_type
       image           = sp.image
       count           = sp.count
-      network_name    = sp.enable_network ? sp.network_name : null
-      subnet_name     = sp.enable_network ? sp.subnet_name : null
+      network_name    = "k3s-cluster-network"
+      subnet_name     = "default-subnet"
       ssh_key_name    = "k3s-cluster-ssh-key"
       labels          = sp.labels
       ipv4_enabled    = sp.ipv4_enabled
-      ipv6_enabled    = sp.ipv4_enabled ? false : true
-      cloud_init_file = sp.cloud_init_file
+      ipv6_enabled    = false
+      cloud_init_file = "cloud-init.yaml"
+      enable_network  = sp.enable_network
+      location        = sp.location
     }
   }
 }
@@ -43,14 +45,14 @@ module "hcloud_server_pools" {
   for_each     = { for n in local.server_pools : n.name => n }
   source       = "../../modules/hcloud_server_pool"
   name         = each.key
-  location     = "fsn1"
+  location     = each.value.location
   image        = each.value.image
   node_type    = each.value.node_type
   server_count = each.value.count
   ssh_key_id   = hcloud_ssh_key.this[each.value.ssh_key_name].id
   ipv4_enabled = each.value.ipv4_enabled
   ipv6_enabled = each.value.ipv6_enabled
-  subnet_id    = each.value.network_name == null || each.value.subnet_name == null ? null : module.hcloud_networks[each.value.network_name].subnets[each.value.subnet_name].id
+  subnet_id    = each.value.enable_network ? module.hcloud_networks[each.value.network_name].subnets[each.value.subnet_name].id : null
   user_data    = templatefile("${path.module}/files/${each.value.cloud_init_file}", {})
   depends_on   = [module.hcloud_networks]
   labels = merge(

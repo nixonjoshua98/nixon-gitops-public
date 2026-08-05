@@ -6,13 +6,12 @@ on:
       - untitledproject.api.monolith
       - untitledproject.api.auth
 
-
 permissions:
   contents: write
 
 jobs:
   patch-image:
-    uses: ./.github/workflows/Template.Deployment.yaml
+    uses: ./.github/workflows/Template.UpdateImage.yaml
     with:
       project: untitledproject
       environment: ${{ github.event.client_payload.environment }}

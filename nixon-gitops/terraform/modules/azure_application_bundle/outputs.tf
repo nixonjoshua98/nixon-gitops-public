@@ -28,11 +28,11 @@ output "client_secrets" {
 output "federated_identity_credentials" {
   value = {
     for key, credential in azuread_application_federated_identity_credential.this : key => {
-      id            = credential.id
-      display_name  = credential.display_name
-      subject       = credential.subject
-      issuer        = credential.issuer
-      audiences     = credential.audiences
+      id           = credential.id
+      display_name = credential.display_name
+      subject      = credential.subject
+      issuer       = credential.issuer
+      audiences    = credential.audiences
     }
   }
 }

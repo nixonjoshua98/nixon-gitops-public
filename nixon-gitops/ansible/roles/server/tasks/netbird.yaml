@@ -25,8 +25,12 @@
 
     - name: Configure NetBird apt repository
       ansible.builtin.deb822_repository:
-        repo: deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main
-        filename: netbird
+        name: netbird
+        types: deb
+        uris: https://pkgs.netbird.io/debian
+        suites: stable
+        components: main
+        signed_by: /usr/share/keyrings/netbird-archive-keyring.gpg
         state: present
 
     - name: Install NetBird package

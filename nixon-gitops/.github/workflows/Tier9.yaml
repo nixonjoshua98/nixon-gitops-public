@@ -5,14 +5,14 @@ on:
     types:
       - tier9.abo.worldchat
       - tier9.abo.slime
-      - tier9.abo.api      
+      - tier9.abo.api
 
 permissions:
   contents: write
 
 jobs:
   patch-image:
-    uses: ./.github/workflows/Template.Deployment.yaml
+    uses: ./.github/workflows/Template.UpdateImage.yaml
     with:
       project: tier9
       environment: ${{ github.event.client_payload.environment }}

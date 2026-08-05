@@ -1,0 +1,83 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "nixon-cnpg-cluster.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "nixon-cnpg-cluster.labels" . | indent 4 }}
+spec:
+  instances: {{ .Values.cluster.instances }}
+  imageName: ghcr.io/cloudnative-pg/postgresql:{{ .Values.cluster.image.tag }}
+
+  inheritedMetadata:
+    labels: 
+      azure.workload.identity/use: 'true'
+
+  serviceAccountTemplate:
+    metadata:
+      annotations:
+        azure.workload.identity/client-id: {{ .Values.azureCredential.clientId | quote }}
+      labels:
+        azure.workload.identity/use: "true"
+
+  bootstrap:
+  {{ if eq .Values.bootstrap.mode "initdb" }}
+    initdb:
+      database: {{ .Values.cluster.databaseName }}
+      owner: postgres
+  {{ else }}
+    recovery:
+      source: external-cluster
+      database: {{ .Values.cluster.databaseName }}
+      owner: postgres
+  {{ end }}
+
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+
+{{- if .Values.postgresUserPassword }}
+  superuserSecret: 
+    name: {{ include "nixon-cnpg-cluster.postgresPasswordSecret" . }}
+  enableSuperuserAccess: true
+{{- end  }}
+
+  managed:
+    services:
+      disabledDefaultServices: ['ro', 'r']
+
+  {{ if ne .Values.bootstrap.mode "initdb" }}
+  externalClusters:
+    - name: external-cluster
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: {{ include "nixon-cnpg-cluster.externalObjectStore" . }}
+          serverName: {{ .Values.externalObjectStore.serverName }}
+  {{ end }}
+
+  postgresql:     
+    parameters:
+      pg_stat_statements.max: '1000'
+      huge_pages: 'off'
+      log_timezone: 'Etc/UTC'
+      log_min_duration_statement: '200'
+      datestyle: 'iso, dmy'
+      timezone: 'Etc/UTC'
+      effective_io_concurrency: '200'
+{{- range $key, $value := .Values.cluster.parameters }}
+      {{ $key }}: {{ $value | quote }}
+{{- end }}
+    
+{{ if .Values.objectStore.enabled }}
+  plugins:       
+    - name: barman-cloud.cloudnative-pg.io
+      enabled: true
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: {{ include "nixon-cnpg-cluster.name" . }}
+{{- end }}
+
+  storage:
+    storageClass: local-path
+    size: 1Gi

@@ -4,7 +4,7 @@ appSetValues:
     ARGO_FILE_PATH: argocd/workloads/greedymercs-*.yaml
     VALUE_FILES:
       - /configuration/base/values.yaml
-      - /configuration/greedymercs/environments/{{ .environment }}/values.yaml
+      - /configuration/greedymercs/values.yaml
       - /configuration/greedymercs/environments/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: tier9-appset
@@ -12,7 +12,7 @@ appSetValues:
     ARGO_FILE_PATH: argocd/workloads/tier9-*.yaml
     VALUE_FILES:
       - /configuration/base/values.yaml
-      - /configuration/tier9/environments/{{ .environment }}/values.yaml
+      - /configuration/tier9/values.yaml
       - /configuration/tier9/environments/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: untitledproject-appset
@@ -20,12 +20,19 @@ appSetValues:
     ARGO_FILE_PATH: argocd/workloads/untitledproject-*.yaml
     VALUE_FILES:
       - /configuration/base/values.yaml
-      - /configuration/untitledproject/environments/{{ .environment }}/values.yaml
+      - /configuration/untitledproject/values.yaml
       - /configuration/untitledproject/environments/{{ .environment }}/{{ .name }}.yaml
+
+  - APPSET_NAME: koruxa-appset
+    NAME_TEMPLATE: "{{ .name }}-{{ .environment }}"
+    ARGO_FILE_PATH: argocd/workloads/koruxa-*.yaml
+    VALUE_FILES:
+      - /configuration/base/values.yaml
+      - /configuration/koruxa/environments/{{ .environment }}/{{ .name }}.yaml
 
   - APPSET_NAME: cluster-appset
     NAME_TEMPLATE: "{{ .name }}"
     ARGO_FILE_PATH: argocd/workloads/cluster.yaml
     VALUE_FILES:
       - /configuration/base/values.yaml
-      - /configuration/cluster/helm-release-checker.yaml
+      - /configuration/cluster/{{ .name }}.yaml
